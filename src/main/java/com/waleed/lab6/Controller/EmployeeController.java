@@ -5,6 +5,7 @@ import com.waleed.lab6.Response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,13 @@ public class EmployeeController {
 
     // Add a new employee
     @PostMapping("/add")
-    public ResponseEntity<ApiResponse> addEmployee(@Valid @RequestBody Employee newEmployee) {
+    public ResponseEntity<ApiResponse> addEmployee(@Valid @RequestBody Employee newEmployee, Errors errors) {
+        if (errors.hasErrors()) {
+            String errorMessage = errors.getFieldError().getDefaultMessage();
+            ApiResponse response = new ApiResponse(errorMessage, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
         employees.add(newEmployee);
         ApiResponse response = new ApiResponse("Employee added successfully", newEmployee);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -36,7 +43,13 @@ public class EmployeeController {
 
     // Update an employee
     @PutMapping("/update/{id}")
-    public ResponseEntity<ApiResponse> updateEmployee(@PathVariable String id, @Valid @RequestBody Employee updatedData) {
+    public ResponseEntity<ApiResponse> updateEmployee(@PathVariable String id, @Valid @RequestBody Employee updatedData, Errors errors) {
+        if (errors.hasErrors()) {
+            String errorMessage = errors.getFieldError().getDefaultMessage();
+            ApiResponse response = new ApiResponse(errorMessage, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
         for (Employee e : employees) {
             if (e.getId().equals(id)) {
                 e.setName(updatedData.getName());
@@ -48,11 +61,11 @@ public class EmployeeController {
                 e.setHireDate(updatedData.getHireDate());
                 e.setAnnualLeave(updatedData.getAnnualLeave());
 
-                ApiResponse response = new ApiResponse("Employee with id " + "'" + id + "'" + " updated successfully", e);
+                ApiResponse response = new ApiResponse("Employee updated successfully", e);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
         }
-        ApiResponse response = new ApiResponse("Employee with id " + " '" + id + "' " + " not found for update", null);
+        ApiResponse response = new ApiResponse("Employee not found for update", null);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
