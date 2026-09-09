@@ -144,16 +144,26 @@ public class EmployeeController {
     }
 
     // Promote Employee
-    @PutMapping("/promote/{id}/{requesterPosition}")
-    public ResponseEntity<ApiResponse> promoteEmployee(@PathVariable String id, @PathVariable String requesterPosition) {
-        if (!requesterPosition.equalsIgnoreCase("supervisor")) {
+    @PutMapping("/promote/{id}/{requesterId}")
+    public ResponseEntity<ApiResponse> promoteEmployee(@PathVariable String id, @PathVariable String requesterId) {
+
+        Employee requester = null;
+        for (Employee e : employees) {
+            if (e.getId().equals(requesterId)) {
+                requester = e;
+                break;
+            }
+        }
+
+        if (requester == null || !requester.getPosition().equalsIgnoreCase("supervisor")) {
             ApiResponse response = new ApiResponse("Unauthorized: Only a supervisor can promote employees", null);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
         }
 
         for (Employee e : employees) {
             if (e.getId().equals(id)) {
-                // i've added a new logic to check if the employee is already a supervisor it will return a 400 status code
+                // I've added a new logic to check if the employee is already a supervisor it will return a 400 status code
+                // That says [Employee is already a supervisor]
                 if (e.getPosition().equalsIgnoreCase("supervisor")) {
                     ApiResponse response = new ApiResponse("Employee is already a supervisor", e);
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -172,7 +182,8 @@ public class EmployeeController {
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
         }
-        ApiResponse response = new ApiResponse("Employee not found", null);
+
+        ApiResponse response = new ApiResponse("Target employee not found", null);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 }
