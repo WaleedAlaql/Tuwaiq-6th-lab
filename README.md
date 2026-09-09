@@ -89,7 +89,7 @@ Retrieves employees who have not taken annual leave.
 
 Promotes an employee to a higher position within the organization.
 
-<img width="1440" height="900" alt="Screenshot 1448-03-27 at 11 14 38 AM" src="https://github.com/user-attachments/assets/956a28e4-52d2-4141-a2a9-14ad7c2286f3" />
+<img width="1440" height="900" alt="Screenshot 1448-03-27 at 12 55 47 PM" src="https://github.com/user-attachments/assets/f74d9fd3-85f6-41f2-8a39-88d37ebd6fa0" />
 
 ---
 
