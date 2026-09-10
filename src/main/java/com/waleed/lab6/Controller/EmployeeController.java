@@ -96,7 +96,13 @@ public class EmployeeController {
                 result.add(e);
             }
         }
-        ApiResponse response = new ApiResponse("Employees with position " + "'" + position + "'" + " retrieved successfully", result);
+
+        if (result.isEmpty()) {
+            ApiResponse response = new ApiResponse("No employees found with position '" + position + "'", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        ApiResponse response = new ApiResponse("Employees with position '" + position + "' retrieved successfully", result);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -114,7 +120,13 @@ public class EmployeeController {
                 result.add(e);
             }
         }
-            ApiResponse response = new ApiResponse("Employees with age range " + "'" + minAge + "'" + " to " + "'" + maxAge + "'" + " retrieved successfully", result);
+
+        if (result.isEmpty()) {
+            ApiResponse response = new ApiResponse("No employees found within the age range " + minAge + " to " + maxAge, null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        ApiResponse response = new ApiResponse("Employees with age range " + minAge + " to " + maxAge + " retrieved successfully", result);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
@@ -152,7 +164,13 @@ public class EmployeeController {
                 result.add(e);
             }
         }
-        ApiResponse response = new ApiResponse("Employees with no annual leave retrieved", result);
+
+        if (result.isEmpty()) {
+            ApiResponse response = new ApiResponse("No employees found with zero annual leave", null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
+
+        ApiResponse response = new ApiResponse("Employees with no annual leave retrieved successfully", result);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
